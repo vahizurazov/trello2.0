@@ -141,6 +141,10 @@ class App extends Component {
   };
 
   onDrop = (event, columnId) => {
+    console.log("event", event);
+    console.log("target", event.target.className);
+    console.log("currentTarget", event.currentTarget);
+
     const { draggedCard, columns } = this.state;
     const columnIndex = columns.findIndex(col => col.id === columnId);
     const copyColumns = columns.slice();
@@ -153,6 +157,9 @@ class App extends Component {
   };
   onDragOver = event => {
     event.preventDefault();
+  };
+  onDragEnter = event => {
+    console.log("event.targe ONDRAGENTER", event.target);
   };
 
   render() {
@@ -171,6 +178,7 @@ class App extends Component {
               drag={this.onDrag}
               drop={this.onDrop}
               dragOver={this.onDragOver}
+              dragEnter={this.onDragEnter}
               addCard={this.addCard}
               removeCard={this.removeCard}
               removeColumn={this.removeColumn}

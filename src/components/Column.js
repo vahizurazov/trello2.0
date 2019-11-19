@@ -11,7 +11,8 @@ class Column extends Component {
       removeColumn,
       removeCard,
       drop,
-      dragOver
+      dragOver,
+      dragEnter
     } = this.props;
 
     return (
@@ -19,6 +20,7 @@ class Column extends Component {
         className="wrapper-for-column"
         onDrop={event => drop(event, column.id)}
         onDragOver={event => dragOver(event)}
+        onDragEnter={event => dragEnter(event)}
       >
         <div className="wrap-title">
           <h4>{column.title}</h4>
