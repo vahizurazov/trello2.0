@@ -1,46 +1,34 @@
-import React from "react";
-import Board from "react-trello";
+import React, { Component } from "react";
+import "./style/Board.css";
+import AddColumnForm from "./components/AddColumnForm";
+import Column from "./components/Column";
 
-// const data = {};
-const handleDragStart = (cardId, laneId) => {
-  console.log("drag started");
-  console.log(`cardId: ${cardId}`);
-  console.log(`laneId: ${laneId}`);
-};
-
-const handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
-  console.log("drag ended");
-  console.log(`cardId: ${cardId}`);
-  console.log(`sourceLaneId: ${sourceLaneId}`);
-  console.log(`targetLaneId: ${targetLaneId}`);
-};
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-
+class App extends Component {
+  constructor(...props) {
+    super(...props);
     this.state = {
-      lanes: [
+      columns: [
         {
           title: "Backlog",
           id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
           cards: [
             {
-              description: "111111111111111111",
-              title: "111111111111111111",
+              title: "First Backlog",
+              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
               id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
                 36
               )
             },
             {
-              description: "222222222222222",
-              title: "222222222222222",
+              title: "Second Backlog",
+              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
               id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
                 36
               )
             },
             {
-              description: "33333333333333",
-              title: "33333333333333",
+              title: "Third Backlog",
+              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
               id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
                 36
               )
@@ -52,15 +40,15 @@ export default class App extends React.Component {
           id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
           cards: [
             {
-              description: "1 in DEV",
               title: "1 in DEV",
+              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
               id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
                 36
               )
             },
             {
-              description: "2 in DEV",
               title: "2 in DEV",
+              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
               id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
                 36
               )
@@ -72,54 +60,125 @@ export default class App extends React.Component {
           id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
           cards: [
             {
-              description: "1 DONE",
               title: "1 DONE",
+              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
               id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
                 36
               )
             },
             {
-              description: "2 DONE",
               title: "2 DONE",
+              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
               id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
                 36
               )
             },
             {
-              description: "3 DONE",
               title: "3 DONE",
+              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
               id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
                 36
               )
             }
           ]
         }
-      ]
+      ],
+      draggedCard: {}
     };
   }
-  // handleCardAdd = (card, laneId) => {
-  //   console.log(`New card added to lane ${laneId}`);
-  //   console.dir(card);
-  // };
-  setEventBus = eventBus => {
-    console.log("eventBus", eventBus);
-    this.setState({ eventBus });
+
+  addColumn = title => {
+    this.setState(prevState => ({
+      columns: prevState.columns.concat({
+        title,
+        id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
+        cards: []
+      })
+    }));
+  };
+  removeColumn = id => {
+    this.setState(prevState => ({
+      columns: prevState.columns.filter(item => item.id !== id)
+    }));
+  };
+
+  addCard = (title, description, id) => {
+    console.log(title, description, id);
+    const cardId = {
+      title,
+      description,
+      id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36)
+    };
+    this.state.columns.map((item, index) => {
+      if (item.id === id) {
+        this.setState(prevState => prevState.columns[index].cards.push(cardId));
+      }
+    });
+  };
+  removeCard = (columnId, cardId) => {
+    const { columns } = this.state;
+    const columnIndex = columns.findIndex(el => el.id === columnId);
+    const filteredCards = columns[columnIndex].cards.filter(
+      el => el.id !== cardId
+    );
+    const updatedColumn = { ...columns[columnIndex], cards: filteredCards };
+    const filteredcolumns = columns.filter(el => el.id !== columnId);
+    filteredcolumns.splice(columnIndex, 0, updatedColumn);
+    this.setState({ columns: filteredcolumns });
+  };
+
+  onDrag = (event, card, columnId) => {
+    event.preventDefault();
+    const { columns } = this.state;
+    const columnIndex = columns.findIndex(el => el.id === columnId);
+    const filteredCards = columns[columnIndex].cards.filter(
+      el => el.id !== card.id
+    );
+    const updatedColumn = { ...columns[columnIndex], cards: filteredCards };
+    const filteredcolumns = columns.filter(el => el.id !== columnId);
+    filteredcolumns.splice(columnIndex, 0, updatedColumn);
+    this.setState({ columns: filteredcolumns, draggedCard: card });
+  };
+
+  onDrop = (event, columnId) => {
+    const { draggedCard, columns } = this.state;
+    const columnIndex = columns.findIndex(col => col.id === columnId);
+    const copyColumns = columns.slice();
+    copyColumns[columnIndex].cards.push(draggedCard);
+
+    this.setState({
+      columns: copyColumns,
+      draggedCard: {}
+    });
+  };
+  onDragOver = event => {
+    event.preventDefault();
   };
 
   render() {
-    console.log("this.state", this.state);
-    console.log("handleDragStart", handleDragStart);
+    const { columns } = this.state;
+    console.log("THIS>STATE", this.state);
     return (
-      <Board
-        data={this.state}
-        draggable
-        editable
-        onCardAdd={e => e}
-        // onCardAdd={this.handleCardAdd}
-        eventBusHandle={this.setEventBus}
-        handleDragStart={handleDragStart}
-        handleDragEnd={handleDragEnd}
-      />
+      <div className="board" id="boardId">
+        <AddColumnForm
+          onAdd={(colunmTitle, id) => this.addColumn(colunmTitle, id)}
+        />
+        <div className="columns">
+          {columns.map(column => (
+            <Column
+              column={column}
+              key={column.id}
+              drag={this.onDrag}
+              drop={this.onDrop}
+              dragOver={this.onDragOver}
+              addCard={this.addCard}
+              removeCard={this.removeCard}
+              removeColumn={this.removeColumn}
+            />
+          ))}
+        </div>
+      </div>
     );
   }
 }
+export default App;

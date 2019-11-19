@@ -1,0 +1,135 @@
+/* 
+
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+}
+.gu-hide {
+  display: none !important;
+}
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+} */
+
+.board {
+  text-align: center;
+}
+
+.columns {
+  display: flex;
+  justify-content: space-around;
+  padding: 0;
+  margin: 0;
+}
+.wrapper-for-column {
+  min-width: 200px;
+  min-height: 300px;
+  margin: 0 5px 5px;
+}
+.wrap-title {
+  position: relative;
+}
+.wrapper-for-column h4 {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  margin-bottom: 0;
+}
+.columns .columns-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  list-style: none;
+  padding: 10px;
+  min-height: 300px;
+}
+
+.card-list {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.card {
+  list-style: none;
+  background-color: darkgrey;
+  border: 2px dashed #2398ef;
+  margin-bottom: 10px;
+  position: relative;
+  padding: 10px;
+}
+.add-card-form {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.card-input {
+  margin-bottom: 10px;
+}
+.add-button {
+  margin-right: 10px;
+}
+
+.card .remove-card {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 27px;
+  height: 27px;
+  opacity: 0.3;
+}
+.card .remove-card:hover {
+  opacity: 1;
+}
+.card .remove-card:before,
+.card .remove-card:after {
+  position: absolute;
+  content: " ";
+  height: 23px;
+  width: 3px;
+  background-color: RED;
+}
+.card .remove-card:before {
+  transform: rotate(45deg);
+}
+.card .remove-card:after {
+  transform: rotate(-45deg);
+}
+
+.close {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 27px;
+  height: 32px;
+  opacity: 0.3;
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before,
+.close:after {
+  position: absolute;
+  left: 15px;
+  content: " ";
+  height: 20px;
+  width: 3px;
+  background-color: RED;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
+}
