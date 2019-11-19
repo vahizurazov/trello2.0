@@ -160,6 +160,15 @@ class App extends Component {
   };
   onDragEnter = event => {
     console.log("event.targe ONDRAGENTER", event.target);
+    if (event.target.className == "card") {
+      event.target.style.background = "purple";
+    }
+  };
+  onDragLeave = event => {
+    console.log("event.targe ONDRAGENTER", event.target);
+    if (event.target.className == "card") {
+      event.target.style.background = "";
+    }
   };
 
   render() {
@@ -179,6 +188,7 @@ class App extends Component {
               drop={this.onDrop}
               dragOver={this.onDragOver}
               dragEnter={this.onDragEnter}
+              dragLeave={this.onDragLeave}
               addCard={this.addCard}
               removeCard={this.removeCard}
               removeColumn={this.removeColumn}
