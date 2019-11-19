@@ -141,11 +141,13 @@ class App extends Component {
   };
 
   onDrop = (event, columnId) => {
-    console.log("event", event);
-    console.log("target", event.target.className);
-    console.log("currentTarget", event.currentTarget);
-
+    // console.log("event", event);
+    // console.log("target", event.target.className);
+    // console.log("currentTarget", event.currentTarget);
     const { draggedCard, columns } = this.state;
+    if (event.target.className === "card") {
+      event.target.style.background = "";
+    }
     const columnIndex = columns.findIndex(col => col.id === columnId);
     const copyColumns = columns.slice();
     copyColumns[columnIndex].cards.push(draggedCard);
@@ -160,13 +162,13 @@ class App extends Component {
   };
   onDragEnter = event => {
     console.log("event.targe ONDRAGENTER", event.target);
-    if (event.target.className == "card") {
-      event.target.style.background = "purple";
+    if (event.target.className === "card") {
+      event.target.style.background = "#2398ef";
     }
   };
   onDragLeave = event => {
     console.log("event.targe ONDRAGENTER", event.target);
-    if (event.target.className == "card") {
+    if (event.target.className === "card") {
       event.target.style.background = "";
     }
   };
