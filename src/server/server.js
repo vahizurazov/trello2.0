@@ -60,7 +60,8 @@ const state = {
         }
       ]
     }
-  ]
+  ],
+  draggedCard: {}
 };
 
 io.on("connection", socket => {

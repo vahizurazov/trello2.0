@@ -95,7 +95,7 @@ class App extends Component {
   // componentDidMount() {
   //   this.socket = io("http://localhost:8000");
   //   this.socket.on("new state", state => {
-  //     console.log("state", state);
+  //     // console.log("state", state);
   //     if (JSON.stringify(state) !== JSON.stringify(this.state)) {
   //       this.setState({ ...state });
   //     }
@@ -154,6 +154,7 @@ class App extends Component {
   };
 
   onDrop = (event, columnId) => {
+    event.preventDefault();
     const { draggedCard, columns } = this.state;
     const colIndex = columns.findIndex(col => col.id === columnId);
     const newCardIndex = columns[colIndex].cards.findIndex(
@@ -175,6 +176,7 @@ class App extends Component {
       const newColumnIndex = filteredcolumns.findIndex(
         col => col.id === columnId
       );
+
       filteredcolumns[newColumnIndex].cards.splice(
         newCardIndex,
         0,
@@ -197,12 +199,9 @@ class App extends Component {
     event.preventDefault();
   };
   onDragEnter = event => {
-    console.log("ENTER", event.target);
     if (event.target.className === "card") {
-      console.log("asddddddddddddddddddddddddddd", event.target);
-
-      indexCard = event.target.getAttribute("id");
       event.target.style.background = "#2398ef";
+      indexCard = event.target.getAttribute("id");
     }
   };
   onDragLeave = event => {
@@ -216,7 +215,7 @@ class App extends Component {
     // if (!columns) {
     //   return null;
     // }
-    // console.log("THIS>STATE", this.state);
+
     return (
       <div className="board" id="boardId">
         <AddColumnForm
