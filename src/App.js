@@ -1,8 +1,11 @@
 import React, { Component } from "react";
-import "./style/Board.css";
 import AddColumnForm from "./components/AddColumnForm";
 import Column from "./components/Column";
 
+import "./style/Board.css";
+
+let oldColunmId = [];
+let indexCard = [];
 class App extends Component {
   constructor(...props) {
     super(...props);
@@ -129,45 +132,56 @@ class App extends Component {
 
   onDrag = (event, card, columnId) => {
     event.preventDefault();
-    const { columns } = this.state;
-    const columnIndex = columns.findIndex(el => el.id === columnId);
-    const filteredCards = columns[columnIndex].cards.filter(
-      el => el.id !== card.id
-    );
-    const updatedColumn = { ...columns[columnIndex], cards: filteredCards };
-    const filteredcolumns = columns.filter(el => el.id !== columnId);
-    filteredcolumns.splice(columnIndex, 0, updatedColumn);
-    this.setState({ columns: filteredcolumns, draggedCard: card });
+    oldColunmId = columnId;
+    this.setState({ draggedCard: card });
   };
 
   onDrop = (event, columnId) => {
-    // console.log("event", event);
-    // console.log("target", event.target.className);
-    // console.log("currentTarget", event.currentTarget);
     const { draggedCard, columns } = this.state;
-    if (event.target.className === "card") {
+    const colIndex = columns.findIndex(col => col.id === columnId);
+    const newCardIndex = columns[colIndex].cards.findIndex(
+      card => card.id === indexCard
+    );
+    if (
+      event.target.className === "card" ||
+      event.target.className === "columns-wrapper"
+    ) {
       event.target.style.background = "";
-    }
-    const columnIndex = columns.findIndex(col => col.id === columnId);
-    const copyColumns = columns.slice();
-    copyColumns[columnIndex].cards.push(draggedCard);
+      const columnIndex = columns.findIndex(el => el.id === oldColunmId);
+      const filteredCards = columns[columnIndex].cards.filter(
+        el => el.id !== draggedCard.id
+      );
+      const updatedColumn = { ...columns[columnIndex], cards: filteredCards };
+      const filteredcolumns = columns.filter(el => el.id !== oldColunmId);
+      filteredcolumns.splice(columnIndex, 0, updatedColumn);
 
-    this.setState({
-      columns: copyColumns,
-      draggedCard: {}
-    });
+      const newColumnIndex = filteredcolumns.findIndex(
+        col => col.id === columnId
+      );
+      filteredcolumns[newColumnIndex].cards.splice(
+        newCardIndex,
+        0,
+        draggedCard
+      );
+      this.setState({
+        columns: filteredcolumns,
+        draggedCard: {}
+      });
+    }
   };
+
   onDragOver = event => {
     event.preventDefault();
   };
   onDragEnter = event => {
-    console.log("event.targe ONDRAGENTER", event.target);
     if (event.target.className === "card") {
+      indexCard = event.target.getAttribute("id");
+
       event.target.style.background = "#2398ef";
     }
   };
   onDragLeave = event => {
-    console.log("event.targe ONDRAGENTER", event.target);
+    // console.log("event.targe ONDRAGENTER", event.target);
     if (event.target.className === "card") {
       event.target.style.background = "";
     }
@@ -175,7 +189,7 @@ class App extends Component {
 
   render() {
     const { columns } = this.state;
-    console.log("THIS>STATE", this.state);
+    // console.log("THIS>STATE", this.state);
     return (
       <div className="board" id="boardId">
         <AddColumnForm
