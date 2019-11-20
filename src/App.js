@@ -8,6 +8,8 @@ import "./style/Board.css";
 
 let oldColunmId = [];
 let indexCard = [];
+let draggedCard = [];
+
 class App extends Component {
   constructor(...props) {
     super(...props);
@@ -148,12 +150,15 @@ class App extends Component {
   onDrag = (event, card, columnId) => {
     event.preventDefault();
     oldColunmId = columnId;
-    this.setState({ draggedCard: card });
+    // console.log("1");
+    draggedCard = card;
+    // console.log("draggedCard", draggedCard);
+    // this.setState({ draggedCard: card });
   };
 
   onDrop = (event, columnId) => {
     event.preventDefault();
-    const { draggedCard, columns } = this.state;
+    const { columns } = this.state;
     const colIndex = columns.findIndex(col => col.id === columnId);
     const newCardIndex = columns[colIndex].cards.findIndex(
       card => card.id === indexCard
@@ -187,8 +192,8 @@ class App extends Component {
       //   });
       // });
       this.setState({
-        columns: filteredcolumns,
-        draggedCard: {}
+        columns: filteredcolumns
+        // draggedCard: {}
       });
     }
   };
@@ -213,6 +218,7 @@ class App extends Component {
     if (!columns) {
       return null;
     }
+    console.log("state", this.state);
 
     return (
       <div className="board" id="boardId">
