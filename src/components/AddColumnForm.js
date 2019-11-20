@@ -11,9 +11,6 @@ export default class AddColumnForm extends Component {
   onSubmit(event) {
     event.preventDefault();
     const colunmTitle = this.textInput.value.trim();
-    console.log("taskText", colunmTitle);
-    console.log("this.props", this.props);
-
     if (colunmTitle && this.props.onAdd) {
       this.props.onAdd(colunmTitle);
     }

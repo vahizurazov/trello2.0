@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import AddColumnForm from "./components/AddColumnForm";
 import Column from "./components/Column";
 
+// import io from "socket.io-client";
+
 import "./style/Board.css";
 
 let oldColunmId = [];
@@ -90,6 +92,22 @@ class App extends Component {
     };
   }
 
+  // componentDidMount() {
+  //   this.socket = io("http://localhost:8000");
+  //   this.socket.on("new state", state => {
+  //     console.log("state", state);
+  //     if (JSON.stringify(state) !== JSON.stringify(this.state)) {
+  //       this.setState({ ...state });
+  //     }
+  //   });
+  // }
+
+  // componentDidUpdate() {
+  //   if (this.state.columns) {
+  //     this.socket.emit("new state", this.state);
+  //   }
+  // }
+
   addColumn = title => {
     this.setState(prevState => ({
       columns: prevState.columns.concat({
@@ -106,7 +124,6 @@ class App extends Component {
   };
 
   addCard = (title, description, id) => {
-    console.log(title, description, id);
     const cardId = {
       title,
       description,
@@ -163,6 +180,12 @@ class App extends Component {
         0,
         draggedCard
       );
+      // this.setState({ columns: null }, () => {
+      //   this.socket.emit("new state", {
+      //     columns: filteredcolumns,
+      //     draggedCard: {}
+      //   });
+      // });
       this.setState({
         columns: filteredcolumns,
         draggedCard: {}
@@ -174,14 +197,15 @@ class App extends Component {
     event.preventDefault();
   };
   onDragEnter = event => {
+    console.log("ENTER", event.target);
     if (event.target.className === "card") {
-      indexCard = event.target.getAttribute("id");
+      console.log("asddddddddddddddddddddddddddd", event.target);
 
+      indexCard = event.target.getAttribute("id");
       event.target.style.background = "#2398ef";
     }
   };
   onDragLeave = event => {
-    // console.log("event.targe ONDRAGENTER", event.target);
     if (event.target.className === "card") {
       event.target.style.background = "";
     }
@@ -189,6 +213,9 @@ class App extends Component {
 
   render() {
     const { columns } = this.state;
+    // if (!columns) {
+    //   return null;
+    // }
     // console.log("THIS>STATE", this.state);
     return (
       <div className="board" id="boardId">
