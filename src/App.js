@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import AddColumnForm from "./components/AddColumnForm";
 import Column from "./components/Column";
 
-// import io from "socket.io-client";
+import io from "socket.io-client";
 
 import "./style/Board.css";
 
@@ -12,101 +12,99 @@ class App extends Component {
   constructor(...props) {
     super(...props);
     this.state = {
-      columns: [
-        {
-          title: "Backlog",
-          id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
-          cards: [
-            {
-              title: "First Backlog",
-              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
-              id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
-                36
-              )
-            },
-            {
-              title: "Second Backlog",
-              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
-              id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
-                36
-              )
-            },
-            {
-              title: "Third Backlog",
-              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
-              id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
-                36
-              )
-            }
-          ]
-        },
-        {
-          title: "In Dev",
-          id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
-          cards: [
-            {
-              title: "1 in DEV",
-              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
-              id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
-                36
-              )
-            },
-            {
-              title: "2 in DEV",
-              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
-              id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
-                36
-              )
-            }
-          ]
-        },
-        {
-          title: "Done",
-          id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
-          cards: [
-            {
-              title: "1 DONE",
-              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
-              id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
-                36
-              )
-            },
-            {
-              title: "2 DONE",
-              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
-              id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
-                36
-              )
-            },
-            {
-              title: "3 DONE",
-              description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
-              id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
-                36
-              )
-            }
-          ]
-        }
-      ],
-      draggedCard: {}
+      // columns: [
+      //   {
+      //     title: "Backlog",
+      //     id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
+      //     cards: [
+      //       {
+      //         title: "First Backlog",
+      //         description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
+      //         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
+      //           36
+      //         )
+      //       },
+      //       {
+      //         title: "Second Backlog",
+      //         description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
+      //         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
+      //           36
+      //         )
+      //       },
+      //       {
+      //         title: "Third Backlog",
+      //         description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
+      //         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
+      //           36
+      //         )
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     title: "In Dev",
+      //     id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
+      //     cards: [
+      //       {
+      //         title: "1 in DEV",
+      //         description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
+      //         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
+      //           36
+      //         )
+      //       },
+      //       {
+      //         title: "2 in DEV",
+      //         description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
+      //         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
+      //           36
+      //         )
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     title: "Done",
+      //     id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
+      //     cards: [
+      //       {
+      //         title: "1 DONE",
+      //         description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
+      //         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
+      //           36
+      //         )
+      //       },
+      //       {
+      //         title: "2 DONE",
+      //         description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
+      //         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
+      //           36
+      //         )
+      //       },
+      //       {
+      //         title: "3 DONE",
+      //         description: "asidfai asdf asdf sadf sadf asdf sad fpiasudhuh",
+      //         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(
+      //           36
+      //         )
+      //       }
+      //     ]
+      //   }
+      // ],
+      // draggedCard: {}
     };
   }
 
-  // componentDidMount() {
-  //   this.socket = io("http://localhost:8000");
-  //   this.socket.on("new state", state => {
-  //     // console.log("state", state);
-  //     if (JSON.stringify(state) !== JSON.stringify(this.state)) {
-  //       this.setState({ ...state });
-  //     }
-  //   });
-  // }
+  componentDidMount() {
+    this.socket = io("http://localhost:8000");
+    this.socket.on("new state", state => {
+      // console.log("state", state);
+      if (JSON.stringify(state) !== JSON.stringify(this.state)) {
+        this.setState({ ...state });
+      }
+    });
+  }
 
-  // componentDidUpdate() {
-  //   if (this.state.columns) {
-  //     this.socket.emit("new state", this.state);
-  //   }
-  // }
+  componentDidUpdate() {
+    this.socket.emit("new state", this.state);
+  }
 
   addColumn = title => {
     this.setState(prevState => ({
@@ -212,9 +210,9 @@ class App extends Component {
 
   render() {
     const { columns } = this.state;
-    // if (!columns) {
-    //   return null;
-    // }
+    if (!columns) {
+      return null;
+    }
 
     return (
       <div className="board" id="boardId">
