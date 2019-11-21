@@ -1,6 +1,9 @@
 const io = require("socket.io")();
 
-const state = {
+const port = 8000;
+
+let serverState = {
+  revision: 1,
   columns: [
     {
       title: "Backlog",
@@ -65,23 +68,25 @@ const state = {
 };
 
 io.on("connection", socket => {
-  io.emit("io.emit", state);
+  io.emit("trello.init", serverState);
 
-  socket.on("new state", state => {
-    console.log("here is update");
-    io.emit("new state", state);
+  socket.on("trello.modify", state => {
+    serverState = state;
+    // console.log("here is update");
+    io.emit("trello.change", serverState);
   });
-  socket.on("add title column", title => {
-    console.log("title", title);
-    // socket.broadcast.emit("emit title", { state });
-    //console.log('io.emit("emit title", title )', io.emit("emit title", title));
+  // socket.on("add title column", title => {
+  //   console.log("title", title);
+  //   console.log("state", {});
 
-    io.emit("emit title", title);
-  });
+  //   io.emit("emit title", title);
+  //   //console.log('io.emit("emit title", title )', io.emit("emit title", title));
+
+  //   io.emit("emit title", title);
+  // });
   socket.on("disconnect", () => {
     console.error("disconnect");
   });
 });
-const port = 8000;
 io.listen(port);
 console.log("listening on port ", port);

@@ -6,30 +6,30 @@ class Column extends Component {
   render() {
     const {
       column,
-      drag,
-      addCard,
-      removeColumn,
-      removeCard,
-      drop,
-      dragOver,
-      dragEnter,
-      dragLeave
+      onDrag,
+      onAddCard,
+      onRemoveColumn,
+      onRemoveCard,
+      onDrop,
+      onDragOver,
+      onDragEnter,
+      onDragLeave
     } = this.props;
 
     return (
       <div
         className="wrapper-for-column"
-        onDrop={event => drop(event, column.id)}
-        onDragOver={event => dragOver(event)}
-        onDragEnter={event => dragEnter(event)}
-        onDragLeave={event => dragLeave(event)}
+        onDrop={event => onDrop(event, column.id)}
+        onDragOver={event => onDragOver(event)}
+        onDragEnter={event => onDragEnter(event)}
+        onDragLeave={event => onDragLeave(event)}
       >
         <div className="wrap-title">
           <h4>{column.title}</h4>
           <span
             href="#"
             className="close"
-            onClick={() => removeColumn(column.id)}
+            onClick={() => onRemoveColumn(column.id)}
           ></span>
         </div>
 
@@ -38,13 +38,13 @@ class Column extends Component {
             <Card
               card={card}
               key={card.id}
-              drag={drag}
+              onDrag={onDrag}
               columnId={column.id}
-              removeCard={removeCard}
+              onRemoveCard={onRemoveCard}
             />
           ))}
         </div>
-        <AddCardForm addCard={addCard} id={column.id} />
+        <AddCardForm onAddCard={onAddCard} id={column.id} />
       </div>
     );
   }

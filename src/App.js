@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import AddColumnForm from "./components/AddColumnForm";
 import Column from "./components/Column";
 
-import io from "socket.io-client";
+import { socketInstance } from "./network";
 
 import "./style/Board.css";
+
+console.log(socketInstance);
 
 let oldColunmId = [];
 let indexCard = [];
@@ -14,6 +16,7 @@ class App extends Component {
   constructor(...props) {
     super(...props);
     this.state = {
+      revision: 0
       // columns: [
       //   {
       //     title: "Backlog",
@@ -95,23 +98,28 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.socket = io("http://localhost:8000");
-    this.socket.on("io.emit", state => {
-      // console.log("state", state);
-      if (JSON.stringify(state) !== JSON.stringify(this.state)) {
-        this.setState({ ...state });
+    socketInstance.once("trello.init", state => {
+      console.log("state", state);
+      if (this.state.revision < state.revision) {
+        this.setState(state);
+      }
+    });
+
+    socketInstance.on("trello.change", state => {
+      if (this.state.revision < state.revision) {
+        console.log("THIS STATE CHANGED", state);
+        this.setState(state);
       }
     });
   }
 
   componentDidUpdate() {
-    this.socket.emit("new state", this.state);
+    socketInstance.emit("trello.modify", this.state);
   }
 
-  addColumn = title => {
-    this.socket = io("http://localhost:8000");
-    this.socket.emit("add title column", title);
-    this.socket.on("emit title", res => {
+  addColumn(title) {
+    socketInstance.emit("add_column", title);
+    socketInstance.on("emit title", res => {
       console.log("resres", res);
       // this.setState({ ...res });
     });
@@ -122,23 +130,28 @@ class App extends Component {
     //     cards: []
     //   })
     // }));
-  };
+  }
   removeColumn = id => {
     this.setState(prevState => ({
+      revision: this.state.revision + 1,
       columns: prevState.columns.filter(item => item.id !== id)
     }));
   };
 
   addCard = (title, description, id) => {
-    const cardId = {
+    console.log(this);
+    const card = {
       title,
       description,
       id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36)
     };
-    this.state.columns.map((item, index) => {
-      if (item.id === id) {
-        this.setState(prevState => prevState.columns[index].cards.push(cardId));
-      }
+    const itemIndex = this.state.columns.findIndex(item => item.id === id);
+    this.setState(prevState => {
+      this.state.columns[itemIndex].cards.push(card);
+      return {
+        revision: this.state.revision + 1,
+        columns: this.state.columns
+      };
     });
   };
   removeCard = (columnId, cardId) => {
@@ -150,7 +163,10 @@ class App extends Component {
     const updatedColumn = { ...columns[columnIndex], cards: filteredCards };
     const filteredcolumns = columns.filter(el => el.id !== columnId);
     filteredcolumns.splice(columnIndex, 0, updatedColumn);
-    this.setState({ columns: filteredcolumns });
+    this.setState({
+      revision: this.state.revision + 1,
+      columns: filteredcolumns
+    });
   };
 
   onDrag = (event, card, columnId) => {
@@ -192,6 +208,7 @@ class App extends Component {
       //   });
       // });
       this.setState({
+        revision: this.state.revision + 1,
         columns: filteredcolumns
         // draggedCard: {}
       });
@@ -210,6 +227,7 @@ class App extends Component {
       );
       filteredcolumns[newColumnIndex].cards.push(draggedCard);
       this.setState({
+        revision: this.state.revision + 1,
         columns: filteredcolumns
       });
     }
@@ -247,14 +265,14 @@ class App extends Component {
             <Column
               column={column}
               key={column.id}
-              drag={this.onDrag}
-              drop={this.onDrop}
-              dragOver={this.onDragOver}
-              dragEnter={this.onDragEnter}
-              dragLeave={this.onDragLeave}
-              addCard={this.addCard}
-              removeCard={this.removeCard}
-              removeColumn={this.removeColumn}
+              onDrag={this.onDrag}
+              onDrop={this.onDrop}
+              onDragOver={this.onDragOver}
+              onDragEnter={this.onDragEnter}
+              onDragLeave={this.onDragLeave}
+              onAddCard={this.addCard}
+              onRemoveCard={this.removeCard}
+              onRemoveColumn={this.removeColumn}
             />
           ))}
         </div>

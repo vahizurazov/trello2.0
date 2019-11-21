@@ -12,8 +12,8 @@ export default class AddCardForm extends React.Component {
     event.preventDefault();
     const cardTitle = this.textInput.value.trim();
     const cardDescription = this.textInputTwo.value.trim();
-    if (cardTitle && this.props.addCard) {
-      this.props.addCard(cardTitle, cardDescription, this.props.id);
+    if (cardTitle && this.props.onAddCard) {
+      this.props.onAddCard(cardTitle, cardDescription, this.props.id);
     }
     this.textInput.value = "";
     this.textInputTwo.value = "";
