@@ -65,13 +65,21 @@ const state = {
 };
 
 io.on("connection", socket => {
-  io.emit("new state", state);
+  io.emit("io.emit", state);
+
   socket.on("new state", state => {
     console.log("here is update");
     io.emit("new state", state);
   });
+  socket.on("add title column", title => {
+    console.log("title", title);
+    // socket.broadcast.emit("emit title", { state });
+    //console.log('io.emit("emit title", title )', io.emit("emit title", title));
+
+    io.emit("emit title", title);
+  });
   socket.on("disconnect", () => {
-    console.error("ERROR");
+    console.error("disconnect");
   });
 });
 const port = 8000;

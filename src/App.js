@@ -96,7 +96,7 @@ class App extends Component {
 
   componentDidMount() {
     this.socket = io("http://localhost:8000");
-    this.socket.on("new state", state => {
+    this.socket.on("io.emit", state => {
       // console.log("state", state);
       if (JSON.stringify(state) !== JSON.stringify(this.state)) {
         this.setState({ ...state });
@@ -109,13 +109,19 @@ class App extends Component {
   }
 
   addColumn = title => {
-    this.setState(prevState => ({
-      columns: prevState.columns.concat({
-        title,
-        id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
-        cards: []
-      })
-    }));
+    this.socket = io("http://localhost:8000");
+    this.socket.emit("add title column", title);
+    this.socket.on("emit title", res => {
+      console.log("resres", res);
+      // this.setState({ ...res });
+    });
+    // this.setState(prevState => ({
+    //   columns: prevState.columns.concat({
+    //     title,
+    //     id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
+    //     cards: []
+    //   })
+    // }));
   };
   removeColumn = id => {
     this.setState(prevState => ({
@@ -148,7 +154,7 @@ class App extends Component {
   };
 
   onDrag = (event, card, columnId) => {
-    event.preventDefault();
+    // event.preventDefault();
     oldColunmId = columnId;
     draggedCard = card;
   };
@@ -199,21 +205,12 @@ class App extends Component {
       const updatedColumn = { ...columns[columnIndex], cards: filteredCards };
       const filteredcolumns = columns.filter(el => el.id !== oldColunmId);
       filteredcolumns.splice(columnIndex, 0, updatedColumn);
-
       const newColumnIndex = filteredcolumns.findIndex(
         col => col.id === columnId
       );
-
       filteredcolumns[newColumnIndex].cards.push(draggedCard);
-      // this.setState({ columns: null }, () => {
-      //   this.socket.emit("new state", {
-      //     columns: filteredcolumns,
-      //     draggedCard: {}
-      //   });
-      // });
       this.setState({
         columns: filteredcolumns
-        // draggedCard: {}
       });
     }
   };
