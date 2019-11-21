@@ -150,10 +150,7 @@ class App extends Component {
   onDrag = (event, card, columnId) => {
     event.preventDefault();
     oldColunmId = columnId;
-    // console.log("1");
     draggedCard = card;
-    // console.log("draggedCard", draggedCard);
-    // this.setState({ draggedCard: card });
   };
 
   onDrop = (event, columnId) => {
@@ -163,10 +160,7 @@ class App extends Component {
     const newCardIndex = columns[colIndex].cards.findIndex(
       card => card.id === indexCard
     );
-    if (
-      event.target.className === "card" ||
-      event.target.className === "columns-wrapper"
-    ) {
+    if (event.target.className === "card") {
       event.target.style.background = "";
       const columnIndex = columns.findIndex(el => el.id === oldColunmId);
       const filteredCards = columns[columnIndex].cards.filter(
@@ -185,6 +179,32 @@ class App extends Component {
         0,
         draggedCard
       );
+      // this.setState({ columns: null }, () => {
+      //   this.socket.emit("new state", {
+      //     columns: filteredcolumns,
+      //     draggedCard: {}
+      //   });
+      // });
+      this.setState({
+        columns: filteredcolumns
+        // draggedCard: {}
+      });
+    }
+    if (event.target.className === "columns-wrapper") {
+      event.target.style.background = "";
+      const columnIndex = columns.findIndex(el => el.id === oldColunmId);
+      const filteredCards = columns[columnIndex].cards.filter(
+        el => el.id !== draggedCard.id
+      );
+      const updatedColumn = { ...columns[columnIndex], cards: filteredCards };
+      const filteredcolumns = columns.filter(el => el.id !== oldColunmId);
+      filteredcolumns.splice(columnIndex, 0, updatedColumn);
+
+      const newColumnIndex = filteredcolumns.findIndex(
+        col => col.id === columnId
+      );
+
+      filteredcolumns[newColumnIndex].cards.push(draggedCard);
       // this.setState({ columns: null }, () => {
       //   this.socket.emit("new state", {
       //     columns: filteredcolumns,
@@ -218,7 +238,7 @@ class App extends Component {
     if (!columns) {
       return null;
     }
-    console.log("state", this.state);
+    // console.log("state", this.state);
 
     return (
       <div className="board" id="boardId">

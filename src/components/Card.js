@@ -11,8 +11,8 @@ class Card extends Component {
         draggable
         onDrag={event => drag(event, card, columnId)}
       >
-        <p className="cardTitle">Title: {card.title}</p>
-        <p className="cardTitle">Description: {card.description}</p>
+        <p className="card-title">Title: {card.title}</p>
+        <p className="card-title">Description: {card.description}</p>
 
         <span
           href="#"
