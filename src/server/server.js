@@ -72,18 +72,16 @@ io.on("connection", socket => {
 
   socket.on("trello.modify", state => {
     serverState = state;
-    // console.log("here is update");
-    io.emit("trello.change", serverState);
+    let data = JSON.stringify(serverState);
+    console.log("here is update");
+    // console.log(data, "DATA");
+    // io.emit(__dirname + "/list.json", data, err => {
+    //   if (err) throw err;
+    //   console.log("Data written to file");
+    // });
+    io.emit("trello.change", data);
   });
-  // socket.on("add title column", title => {
-  //   console.log("title", title);
-  //   console.log("state", {});
 
-  //   io.emit("emit title", title);
-  //   //console.log('io.emit("emit title", title )', io.emit("emit title", title));
-
-  //   io.emit("emit title", title);
-  // });
   socket.on("disconnect", () => {
     console.error("disconnect");
   });

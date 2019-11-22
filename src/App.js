@@ -118,18 +118,13 @@ class App extends Component {
   }
 
   addColumn(title) {
-    socketInstance.emit("add_column", title);
-    socketInstance.on("emit title", res => {
-      console.log("resres", res);
-      // this.setState({ ...res });
-    });
-    // this.setState(prevState => ({
-    //   columns: prevState.columns.concat({
-    //     title,
-    //     id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
-    //     cards: []
-    //   })
-    // }));
+    this.setState(prevState => ({
+      columns: prevState.columns.concat({
+        title,
+        id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
+        cards: []
+      })
+    }));
   }
   removeColumn = id => {
     this.setState(prevState => ({
