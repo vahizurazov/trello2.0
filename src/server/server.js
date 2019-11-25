@@ -72,14 +72,8 @@ io.on("connection", socket => {
 
   socket.on("trello.modify", state => {
     serverState = state;
-    let data = JSON.stringify(serverState);
     console.log("here is update");
-    // console.log(data, "DATA");
-    // io.emit(__dirname + "/list.json", data, err => {
-    //   if (err) throw err;
-    //   console.log("Data written to file");
-    // });
-    io.emit("trello.change", data);
+    io.emit("trello.change", serverState);
   });
 
   socket.on("disconnect", () => {

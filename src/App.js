@@ -6,7 +6,7 @@ import { socketInstance } from "./network";
 
 import "./style/Board.css";
 
-console.log(socketInstance);
+// console.log(socketInstance);
 
 let oldColunmId = [];
 let indexCard = [];
@@ -119,6 +119,7 @@ class App extends Component {
 
   addColumn(title) {
     this.setState(prevState => ({
+      revision: this.state.revision + 1,
       columns: prevState.columns.concat({
         title,
         id: Math.floor(+new Date() + Math.random() * 0xffffffff).toString(36),
@@ -165,7 +166,8 @@ class App extends Component {
   };
 
   onDrag = (event, card, columnId) => {
-    // event.preventDefault();
+    console.log(columnId);
+
     oldColunmId = columnId;
     draggedCard = card;
   };
