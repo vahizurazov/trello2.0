@@ -166,8 +166,8 @@ class App extends Component {
   };
 
   onDrag = (event, card, columnId) => {
-    console.log(columnId);
-
+    // console.log("card", card);
+    // console.log("columnId", columnId);
     oldColunmId = columnId;
     draggedCard = card;
   };

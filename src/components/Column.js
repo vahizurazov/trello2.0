@@ -23,6 +23,8 @@ class Column extends Component {
         onDragOver={event => onDragOver(event)}
         onDragEnter={event => onDragEnter(event)}
         onDragLeave={event => onDragLeave(event)}
+        // draggable
+        // onDrag={event => onDrag(event, column, column.id)}
       >
         <div className="wrap-title">
           <h4>{column.title}</h4>
